@@ -3,7 +3,7 @@ from states import GetInfo
 from aiogram.dispatcher import FSMContext
 from loader import dp
 from handlers.group.send_lot import send_lot_func
-from wrkDB import addLot
+
 
 
 @dp.message_handler(text="Отправить Контент")
@@ -38,7 +38,6 @@ async def getContent_step3(message: types.Message, state: FSMContext):
 
     await message.answer_photo(photo, text)
     await state.finish()
-    await send_lot_func(photo, text)
-    await addLot(message.from_user.id, photo, text)
+    await send_lot_func(photo, text, message.from_user.id)
     return
 

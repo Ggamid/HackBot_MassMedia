@@ -35,15 +35,16 @@ def create_bd():
     conn.close()
 
 
-def addLot(tg_id, lot_photo_id, text_lot, status_lot="Опубликовано", lot_video_id="-"):
+def addLot(tg_id, lot_photo_id, text_lot, lot_id, status_lot="Опубликовано", lot_video_id="-"):
     try:
         with psycopg2.connect(database=DB_NAME, user=USER, password=DB_PASSWORD, host=HOST) as con:
             with con.cursor() as cur:
-                cur.execute(f"insert into lots_table(user_id, lot_photo_id, text_lot, status_lot,lot_video_id) Values(%s)", [tg_id, lot_photo_id, text_lot, status_lot, lot_video_id])
+                cur.execute(
+                    f"insert into lots_table(user_id, lot_photo_id, text_lot, status_lot,lot_video_id, lot_id) Values(%s, %s, %s, %s, %s, %s)",
+                    [tg_id, lot_photo_id, text_lot, status_lot, lot_video_id, lot_id])
 
     except psycopg2.Error as _ex:
         print("[INFO]", _ex)
-
 
 
 def drop_table():
@@ -58,4 +59,15 @@ def drop_table():
         print("[INFO] Error while working with PostgreSQL", e)
 
 
-create_bd()
+def get_lot_data_with_lot_id(lot_id):
+    try:
+        with psycopg2.connect(database=DB_NAME, user=USER, password=DB_PASSWORD, host=HOST) as connect:
+            connect.autocommit = True
+            with connect.cursor() as cursor1:
+                cursor1.execute(f"select lot_photo_id from lots_table where lot_id=%s", [lot_id])
+                photo_id = cursor1.fetchone()[0]
+                cursor1.execute(f"select text_lot from lots_table where lot_id=%s", [lot_id])
+                text = cursor1.fetchone()[0]
+        return [photo_id, text]
+    except psycopg2.Error as _ex:
+        print("[INFO]", _ex)
