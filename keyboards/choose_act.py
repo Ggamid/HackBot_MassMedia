@@ -1,11 +1,10 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
-choose_kind_of_content = ReplyKeyboardMarkup(
+get_permission = ReplyKeyboardMarkup(
     [
         [
-            KeyboardButton('Спорт 🏃🏻'),
-            KeyboardButton('Региональные 🏘️'),
-            KeyboardButton('Экономика 💰')
+            KeyboardButton('ДА! 🤩'),
+            KeyboardButton('НЕТ! 🫤')
         ]
     ], resize_keyboard=True, one_time_keyboard=True
 )
@@ -13,7 +12,7 @@ choose_kind_of_content = ReplyKeyboardMarkup(
 send_content = ReplyKeyboardMarkup(
     [
         [
-            KeyboardButton('Отправить Контент'),
+            KeyboardButton('Отправить Контент 📸'),
 
         ]
     ], resize_keyboard=True, one_time_keyboard=True

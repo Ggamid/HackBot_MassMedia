@@ -1,3 +1,4 @@
-from .choose_act import choose_kind_of_content, send_content
+from .choose_act import get_permission, send_content
 from .inlineKeyBoard import generate_InlineKeyboardMarkup
+from .inlineKeyBoard import yes_no
 

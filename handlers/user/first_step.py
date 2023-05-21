@@ -1,7 +1,7 @@
 from states import GetInfo
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from keyboards import choose_kind_of_content, send_content
+from keyboards import get_permission, send_content
 from loader import dp
 
 

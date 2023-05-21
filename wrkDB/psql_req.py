@@ -35,13 +35,13 @@ def create_bd():
     conn.close()
 
 
-def addLot(tg_id, lot_photo_id, text_lot, lot_id, status_lot="Опубликовано", lot_video_id="-"):
+def addLot(tg_id, lot_photo_id, text_lot, lot_id, price, username, status_lot="Опубликовано", lot_video_id="-"):
     try:
         with psycopg2.connect(database=DB_NAME, user=USER, password=DB_PASSWORD, host=HOST) as con:
             with con.cursor() as cur:
                 cur.execute(
-                    f"insert into lots_table(user_id, lot_photo_id, text_lot, status_lot,lot_video_id, lot_id) Values(%s, %s, %s, %s, %s, %s)",
-                    [tg_id, lot_photo_id, text_lot, status_lot, lot_video_id, lot_id])
+                    f"insert into lots_table(user_id, lot_photo_id, text_lot, status_lot, lot_video_id, lot_id, price, username) Values(%s, %s, %s, %s, %s, %s, %s, %s)",
+                    [tg_id, lot_photo_id, text_lot, status_lot, lot_video_id, lot_id, price, username])
 
     except psycopg2.Error as _ex:
         print("[INFO]", _ex)
@@ -68,6 +68,21 @@ def get_lot_data_with_lot_id(lot_id):
                 photo_id = cursor1.fetchone()[0]
                 cursor1.execute(f"select text_lot from lots_table where lot_id=%s", [lot_id])
                 text = cursor1.fetchone()[0]
-        return [photo_id, text]
+                cursor1.execute(f"select price from lots_table where lot_id=%s", [lot_id])
+                price = cursor1.fetchone()[0]
+                cursor1.execute(f"select username from lots_table where lot_id=%s", [lot_id])
+                username = cursor1.fetchone()[0]
+        return [photo_id, text, price, username]
     except psycopg2.Error as _ex:
         print("[INFO]", _ex)
+
+
+def drop_data_in_table():
+    try:
+        with psycopg2.connect(database=DB_NAME, user=USER, password=DB_PASSWORD, host=HOST) as con:
+            con.autocommit = True
+            with con.cursor() as cur:
+                cur.execute("TRUNCATE TABLE lots_table")
+
+    except Exception as e:
+        print("[INFO] Error while working with PostgreSQL", e)
